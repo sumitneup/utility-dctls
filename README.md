@@ -120,6 +120,8 @@ Either let me know and I'll consider it, or implement the feature yourself and m
         - [Tanh Function DCTL](#tanh-function-dctl)
         - [Unit Length DCTL](#unit-length-dctl)
         - [Vector Norm DCTL](#vector-norm-dctl)
+    - [Transitions](#transitions)
+        - [Dissolve DCTL](#dissolve-dctl)
     - [Utilities](#utilities)
         - [ACES Exposure DCTL](#aces-exposure-dctl)
         - [Annotate Image DCTL](#annotate-image-dctl)
@@ -1924,6 +1926,27 @@ Computes various norms of the given vector.
 **Norm Type**: Choose between `L1 Norm, L2 Norm, Lp Norm, Maximum, Minimum, Arithmetic Mean, Geometric Mean, Harmonic Mean` to choose the norm type.
 
 **P-Norm Power**: If `Lp Norm` is selected for the norm type, this selects the value of `p`. Lp norm is computed by $(\lvert r \rvert^p + \lvert g \rvert^p + \lvert b \rvert^p)^{1/p}$, and L1 and L2 norm are special cases of this.
+
+---
+
+## Transitions
+
+---
+
+### Dissolve DCTL
+
+Cross Dissolve but takes place in scene linear. In order to best use this, you should have your DRT/ODT on the timeline level or in an adjustment clip at one of the higher levels, so that you can run the dissolve in a scene referred encoding. The result should be a dissolve that appears more like a double exposure than the typical crossfades in gamma 2.4 do.
+
+#### DCTL Parameters
+
+**Smooth**: Applies a smoothstep function to the transition progress parameter. Checking this box means that we ease in and out of the dissolve. If you'd like to control the easing yourself, just uncheck this.
+
+**Input Transfer Function**: Match this to the encoding of the image at the end of the color grade (but before the timeline nodes).
+
+**Alpha Behavior**: Generally "Premultiply" will be the best here, which multiplies the straight RGB channels by alpha before mixing, and then it alpha divides at the end. With "Premultiply but output 1", the alpha divide step is replaced with just setting the alpha channel to 1.0. And with "straight", the RGBA channels are all dissolved together, which make create holes in your clip alpha during the transition.
+
+
+---
 
 ## Utilities
 

@@ -1,0 +1,17 @@
+#line 2
+// clang-format off
+// clang-format on
+
+// clang-format off
+__DEVICE__ float4 transition(int p_Width, int p_Height, int p_X, int p_Y, __TEXTURE__ p_FromTexR, __TEXTURE__ p_FromTexG, __TEXTURE__ p_FromTexB, __TEXTURE__ p_FromTexA, __TEXTURE__ p_ToTexR, __TEXTURE__ p_ToTexG, __TEXTURE__ p_ToTexB, __TEXTURE__ p_ToTexA) {
+    // clang-format on
+    // Note that input is straight alpha, not premultiplied. likely recommended to multiply by alpha before transitioning.
+
+    float4 from_rgba = make_float4(_tex2D(p_FromTexR, p_X, p_Y), _tex2D(p_FromTexG, p_X, p_Y), _tex2D(p_FromTexB, p_X, p_Y), _tex2D(p_FromTexA, p_X, p_Y));
+    float3 from_rgb = make_float3(from_rgba.x, from_rgba.y, from_rgba.z);
+
+    float4 to_rgba = make_float4(_tex2D(p_ToTexR, p_X, p_Y), _tex2D(p_ToTexG, p_X, p_Y), _tex2D(p_ToTexB, p_X, p_Y), _tex2D(p_ToTexA, p_X, p_Y));
+    float3 to_rgb = make_float3(to_rgba.x, to_rgba.y, to_rgba.z);
+
+    return from_rgba * (1.0F - TRANSITION_PROGRESS) + to_rgba * TRANSITION_PROGRESS;
+}
